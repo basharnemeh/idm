@@ -212,11 +212,22 @@ public class VideoGenTest {
 	 * Question 4 Tp2
 	 */
 	@Test
-	public void genererDesVignettes() {
-		String vignetteDirectoryPath = "/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/vignettes";
-
+	public void callGenererDesVignettes() {
 		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/example1.videogen"));
+		String vignetteDirectoryPath = "/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/vignettes";
+		genererDesVignettes(videoGen,vignetteDirectoryPath);
+	}
+	
+	public void genererDesVignettes(VideoGeneratorModel videoGen,String vignetteDirectoryPath) {
+		 //créer le repertoir de vignettes
+		File f = null;
+	      try {
+	         f = new File(vignetteDirectoryPath);
+	        f.mkdir();
+	      } catch(Exception e) {
+	         e.printStackTrace();
+	      }
 		assertNotNull(videoGen);
 		System.out.println(videoGen.getInformation().getAuthorName());
 
@@ -237,7 +248,7 @@ public class VideoGenTest {
 			if (media instanceof AlternativesMedia) {
 				AlternativesMedia alternative = ((AlternativesMedia) media);
 				EList<MediaDescription> list = alternative.getMedias();
-				String alternativeDirectoryPath = vignetteDirectoryPath + "/alternatives";
+				String alternativeDirectoryPath = vignetteDirectoryPath;
 				for (MediaDescription m : list) {
 					execGenererVignette(m.getLocation(), alternativeDirectoryPath);
 				}
@@ -608,5 +619,31 @@ public class VideoGenTest {
 			throw new InvalidParameterException();
 		}
 	}
+	
+	//Question 4
+	@Test
+	public void testNbDesVignettes() {
+		int mediaNumber=0;
+		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
+				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/example1.videogen"));
+		String vignetteDirectoryPath = "/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/vignettes";
+		genererDesVignettes(videoGen,vignetteDirectoryPath);
+		for (Media media : videoGen.getMedias()) {
+			if (media instanceof MandatoryMedia || media instanceof OptionalMedia) {
+				mediaNumber++;
+			}
+
+			if (media instanceof AlternativesMedia) {
+				AlternativesMedia alternativeMedias = ((AlternativesMedia) media);
+				int alternativeNumber = alternativeMedias.getMedias().size();
+				mediaNumber+=alternativeNumber;
+			}
+		}
+		int vignettesNumber = new File(vignetteDirectoryPath).list().length;
+		assertEquals(mediaNumber,vignettesNumber);
+	}
+	
+	//Question 5
+	
 
 }
