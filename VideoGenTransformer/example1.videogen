@@ -3,8 +3,8 @@ VideoGen{
 	mandatory videoseq id1 "Videos/mandatory.mp4"
 	optional videoseq id2 "Videos/optional.mp4"
 	alternatives Id {
-		videoseq Videoid5 "Videos/alter1.mp4"
-		videoseq Videoid6 "Videos/alter2.mp4"
-		videoseq Videoid4 "Videos/alter3.mp4"
+		videoseq id3 "Videos/alter1.mp4"
+		videoseq id4 "Videos/alter2.mp4"
+		videoseq id5 "Videos/alter3.mp4"
 	}
 }
