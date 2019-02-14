@@ -24,12 +24,17 @@ import org.eclipse.emf.common.util.URI;
 import org.junit.Test;
 
 import fr.istic.videoGen.AlternativesMedia;
+import fr.istic.videoGen.BlackWhiteFilter;
+import fr.istic.videoGen.Filter;
+import fr.istic.videoGen.FlipFilter;
 import fr.istic.videoGen.MandatoryMedia;
 import fr.istic.videoGen.Media;
 import fr.istic.videoGen.MediaDescription;
+import fr.istic.videoGen.NegateFilter;
 import fr.istic.videoGen.OptionalMedia;
 import fr.istic.videoGen.VideoDescription;
 import fr.istic.videoGen.VideoGeneratorModel;
+import fr.istic.videoGen.VideoText;
 
 public class VideoGenTest {
 
@@ -59,6 +64,10 @@ public class VideoGenTest {
 	public void testJouerPlusieursVideosSeparées() {
 		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/example1.videogen"));
+		jouerPlusieursVideosSeparées(videoGen);
+	}
+
+	public void jouerPlusieursVideosSeparées(VideoGeneratorModel videoGen) {
 		assertNotNull(videoGen);
 		System.out.println(videoGen.getInformation().getAuthorName());
 
@@ -92,13 +101,21 @@ public class VideoGenTest {
 
 	/**
 	 * Question 2 Tp2
+	 * 
+	 * @throws UnsupportedEncodingException
+	 * @throws FileNotFoundException
 	 */
 	@Test
 	public void testJouerPlusieursVideosConcatenees() throws FileNotFoundException, UnsupportedEncodingException {
-		File file = new File("output.mp4");
-		file.delete();
 		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/example1.videogen"));
+		jouerPlusieursVideosConcatenees(videoGen);
+	}
+
+	public void jouerPlusieursVideosConcatenees(VideoGeneratorModel videoGen)
+			throws FileNotFoundException, UnsupportedEncodingException {
+		File file = new File("output.mp4");
+		file.delete();
 		assertNotNull(videoGen);
 		// creating the txt file for the ffmpeg
 		PrintWriter writer = new PrintWriter("mylist.txt", "UTF-8");
@@ -139,14 +156,20 @@ public class VideoGenTest {
 
 	/**
 	 * Question 3 tp2
+	 * @throws InterruptedException 
+	 * @throws IOException 
 	 */
+	
 	@Test
 	public void testJouerPlusieursVideosConcateneesDureesMax() throws IOException, InterruptedException {
-		File file = new File("output.mp4");
-		file.delete();
 		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/example1.videogen"));
-
+		jouerPlusieursVideosConcateneesDureesMax(videoGen);
+	}
+	@Test
+	public void jouerPlusieursVideosConcateneesDureesMax(VideoGeneratorModel videoGen) throws IOException, InterruptedException {
+		File file = new File("output.mp4");
+		file.delete();
 		assertNotNull(videoGen);
 		// creating the txt file for the ffmpeg
 		PrintWriter writer = new PrintWriter("mylist.txt", "UTF-8");
@@ -216,18 +239,18 @@ public class VideoGenTest {
 		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/example1.videogen"));
 		String vignetteDirectoryPath = "/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/vignettes";
-		genererDesVignettes(videoGen,vignetteDirectoryPath);
+		genererDesVignettes(videoGen, vignetteDirectoryPath);
 	}
-	
-	public void genererDesVignettes(VideoGeneratorModel videoGen,String vignetteDirectoryPath) {
-		 //créer le repertoir de vignettes
+
+	public void genererDesVignettes(VideoGeneratorModel videoGen, String vignetteDirectoryPath) {
+		// créer le repertoir de vignettes
 		File f = null;
-	      try {
-	         f = new File(vignetteDirectoryPath);
-	        f.mkdir();
-	      } catch(Exception e) {
-	         e.printStackTrace();
-	      }
+		try {
+			f = new File(vignetteDirectoryPath);
+			f.mkdir();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		assertNotNull(videoGen);
 		System.out.println(videoGen.getInformation().getAuthorName());
 
@@ -290,7 +313,6 @@ public class VideoGenTest {
 			e.printStackTrace();
 		}
 		System.out.println("VLC Started");
-
 	}
 
 	/**
@@ -371,7 +393,8 @@ public class VideoGenTest {
 		makeVariants();
 		variantesToBoolean();
 		writeVariantesToCSVFile();
-//		execMakeGIF("/home/bashar/IDM-Project-workspace" + "/teaching-MDE-IL1819/VideoGenTransformer/output.mp4");
+		// execMakeGIF("/home/bashar/IDM-Project-workspace" +
+		// "/teaching-MDE-IL1819/VideoGenTransformer/output.mp4");
 		// test question 1 tp4
 		int nombreDesVariantes = getNumberOfVariants(videoGen);
 		assertEquals(nombreDesVariantes, variantes.size());
@@ -544,7 +567,7 @@ public class VideoGenTest {
 	// Question 2
 	@Test
 	public void testGetNumberOfVariants1() throws FileNotFoundException {
-		//Test1
+		// Test1
 		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/test1.videogen"));
 		assertNotNull(videoGen);
@@ -552,54 +575,57 @@ public class VideoGenTest {
 		assertEquals(variantes.size(), getNumberOfVariants(videoGen));
 
 	}
+
 	@Test
 	public void testGetNumberOfVariants2() throws FileNotFoundException {
-		//Test2
-		VideoGeneratorModel videoGen= new VideoGenHelper().loadVideoGenerator(URI.createURI(
+		// Test2
+		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/test2.videogen"));
 		assertNotNull(videoGen);
 		getVariants_CSV_GIF(videoGen);
 		assertEquals(variantes.size(), getNumberOfVariants(videoGen));
 	}
-	
+
 	@Test
 	public void testGetNumberOfVariants3() throws FileNotFoundException {
-		//Test2
-		VideoGeneratorModel videoGen= new VideoGenHelper().loadVideoGenerator(URI.createURI(
+		// Test2
+		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/test3.videogen"));
 		assertNotNull(videoGen);
 		getVariants_CSV_GIF(videoGen);
 		assertEquals(variantes.size(), getNumberOfVariants(videoGen));
 	}
-	
+
 	@Test
 	public void testGetNumberOfVariants4() throws FileNotFoundException {
-		//Test2
-		VideoGeneratorModel videoGen= new VideoGenHelper().loadVideoGenerator(URI.createURI(
+		// Test2
+		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/test4.videogen"));
 		assertNotNull(videoGen);
 		getVariants_CSV_GIF(videoGen);
 		assertEquals(variantes.size(), getNumberOfVariants(videoGen));
 	}
+
 	@Test
 	public void testGetNumberOfVariants5() throws FileNotFoundException {
-		//Test2
-		VideoGeneratorModel videoGen= new VideoGenHelper().loadVideoGenerator(URI.createURI(
+		// Test2
+		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/test5.videogen"));
 		assertNotNull(videoGen);
 		getVariants_CSV_GIF(videoGen);
 		assertEquals(variantes.size(), getNumberOfVariants(videoGen));
 	}
+
 	@Test
 	public void testGetNumberOfVariants6() throws FileNotFoundException {
-		//Test2
-		VideoGeneratorModel videoGen= new VideoGenHelper().loadVideoGenerator(URI.createURI(
+		// Test2
+		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/test6.videogen"));
 		assertNotNull(videoGen);
 		getVariants_CSV_GIF(videoGen);
 		assertEquals(variantes.size(), getNumberOfVariants(videoGen));
 	}
-	//Fin Question 2 
+	// Fin Question 2
 
 	// Question 3
 	@Test
@@ -619,15 +645,15 @@ public class VideoGenTest {
 			throw new InvalidParameterException();
 		}
 	}
-	
-	//Question 4
+
+	// Question 4
 	@Test
 	public void testNbDesVignettes() {
-		int mediaNumber=0;
+		int mediaNumber = 0;
 		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(
 				"/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/example1.videogen"));
 		String vignetteDirectoryPath = "/home/bashar/IDM-Project-workspace/teaching-MDE-IL1819/VideoGenTransformer/vignettes";
-		genererDesVignettes(videoGen,vignetteDirectoryPath);
+		genererDesVignettes(videoGen, vignetteDirectoryPath);
 		for (Media media : videoGen.getMedias()) {
 			if (media instanceof MandatoryMedia || media instanceof OptionalMedia) {
 				mediaNumber++;
@@ -636,14 +662,159 @@ public class VideoGenTest {
 			if (media instanceof AlternativesMedia) {
 				AlternativesMedia alternativeMedias = ((AlternativesMedia) media);
 				int alternativeNumber = alternativeMedias.getMedias().size();
-				mediaNumber+=alternativeNumber;
+				mediaNumber += alternativeNumber;
 			}
 		}
 		int vignettesNumber = new File(vignetteDirectoryPath).list().length;
-		assertEquals(mediaNumber,vignettesNumber);
+		assertEquals(mediaNumber, vignettesNumber);
 	}
-	
-	//Question 5
-	
+
+	// Question 7
+
+	public static String filter(Filter filter, String path, boolean generetedFolder) {
+		if (filter != null) {
+			String res = "";
+			System.out.println("le path dans filter = " + path);
+			if (filter instanceof FlipFilter) {
+				FlipFilter flip = (FlipFilter) filter;
+				res = flipFilter(path, flip.getOrientation(), generetedFolder);
+			} else if (filter instanceof BlackWhiteFilter) {
+				res = blackWhiteFilter(path, generetedFolder);
+			} else if (filter instanceof NegateFilter) {
+				res = negateFilter(path, generetedFolder);
+			}
+			return res;
+		}
+		return path;
+	}
+
+	public static String negateFilter(String path, boolean generatedFolder) {
+		String outputPath = "";
+		if (generatedFolder) {
+			outputPath = path.replace(".mp4", "_neg.mp4");
+		} else
+			outputPath = path.replace(".mp4", "_neg.mp4").replace("videos/", "generatedVideos/");
+		String cmd = "ffmpeg -y -i " + path + " -vf lutrgb=r=negval:g=negval:b=negval -c:a ac3 -strict -2 "
+				+ outputPath;
+		System.out.println(cmd);
+		try {
+			Runtime.getRuntime().exec(cmd).waitFor();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return outputPath;
+	}
+
+	public static String blackWhiteFilter(String path, boolean generetedFolder) {
+		String outputPath = "";
+		if (generetedFolder) {
+			outputPath = path.replace(".mp4", "_bw.mp4");
+		} else
+			outputPath = path.replace(".mp4", "_bw.mp4").replace("videos/", "generatedVideos/");
+		String cmd = "ffmpeg -y  -i  " + path + " -vf hue=s=0 -c:a ac3 -strict -2 " + outputPath;
+		System.out.println(cmd);
+		try {
+			Runtime.getRuntime().exec(cmd).waitFor();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return outputPath;
+	}
+
+	public static String flipFilter(String path, String type, boolean generatedFolder) {
+		String outputPath = "";
+		if (generatedFolder) {
+			outputPath = path.replace(".mp4", "_" + type.substring(0, 1) + "flip.mp4");
+		} else
+			outputPath = path.replace(".mp4", "_" + type.substring(0, 1) + "flip.mp4").replace("videos/",
+					"generatedVideos/");
+		System.out.println("flip flop " + type + "  path = " + path);
+		String cmd = "";
+		if (type.equals("h") || type.equals("horizontal")) {
+			cmd = "ffmpeg -i " + path + " -vf hflip -strict -2 " + outputPath;
+			System.out.println(cmd);
+		} else if (type.equals("v") || type.equals("vertical")) {
+			cmd = "ffmpeg -i " + path + " -vf vflip  -strict -2 " + outputPath;
+			System.out.println(cmd);
+		} else {
+			System.err.println("Flip de type " + type + " n'est pas reconnait");
+			return null;
+		}
+		try {
+			Runtime.getRuntime().exec(cmd).waitFor();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return outputPath;
+	}
+
+	public static String addText(String path, VideoText args, boolean generatedFolder) {
+		if (args != null) {
+			String outputPath = "";
+			if (generatedFolder) {
+				outputPath = path.replace(".mp4", "_text.mp4");
+			} else
+				outputPath = path.replace(".mp4", "_text.mp4").replace("videos/", "generatedVideos/");
+
+			String color = "white";
+			int size = 20;
+			String y = "";
+			String content = "'" + args.getContent() + "'";
+			switch (args.getPosition()) {
+			case "TOP":
+				y = "5";
+				break;
+			case "BOTTOM":
+				y = "(h-text_h-line_h)";
+				break;
+			case "CENTER":
+				y = "(h-text_h-line_h)/2";
+				break;
+			default:
+				System.err.println("position inconnue!");
+				return null;
+			}
+
+			if (args.getColor() != null)
+				color = args.getColor();
+			if (args.getSize() > 0)
+				size = args.getSize();
+			String cmd = "ffmpeg -i " + path + " -vf " + '"' + "drawtext=fontsize=" + size + ":fontcolor=" + color
+					+ ": fontfile=/usr/share/fonts/truetype/freefont/FreeSerif.ttf" + ":text=" + "'" + content + "'"
+					+ ":x=(w-text_w)/2:y=" + y + '"' + " -strict -2 " + outputPath;
+			String[] b = new String[] { "/bin/sh", "-c", cmd };
+			System.out.println(cmd);
+			// String cmd = "ffmpeg -y -i "+path+" -vf drawtext="+content+" -c:a ac3
+			// "+outputPath;
+			try {
+				Runtime.getRuntime().exec(b).waitFor();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println(e);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println(e);
+
+			}
+			return outputPath;
+		}
+		return path;
+
+	}
 
 }
