@@ -797,8 +797,6 @@ public class VideoGenTest {
 					+ ":x=(w-text_w)/2:y=" + y + '"' + " -strict -2 " + outputPath;
 			String[] b = new String[] { "/bin/sh", "-c", cmd };
 			System.out.println(cmd);
-			// String cmd = "ffmpeg -y -i "+path+" -vf drawtext="+content+" -c:a ac3
-			// "+outputPath;
 			try {
 				Runtime.getRuntime().exec(b).waitFor();
 			} catch (IOException e) {
