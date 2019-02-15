@@ -51,8 +51,6 @@ public class Empirique {
 				addAlternative(((AlternativesMedia) media));
 			}
 		}
-
-		String[] headers = header.split(";");
 		for (int key : myMap.keySet()) {
 			int p1 = key;
 			String p2 = myMap.get(key);
