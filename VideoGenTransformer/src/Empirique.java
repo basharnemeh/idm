@@ -88,20 +88,6 @@ public class Empirique {
 				}
 			}
 
-			if (media instanceof AlternativesMedia) {
-				int totalProb = 0;
-				for (MediaDescription mm : ((AlternativesMedia) media).getMedias()) {
-					if (!checkFileExists(mm.getLocation())) {
-						throw new IllegalArgumentException("Le fichier " + mm.getLocation() + "n'existe pas");
-					}
-
-					// Check probability
-					if (mm instanceof VideoDescription) {
-						totalProb = ((VideoDescription) mm).getProbability() + totalProb;
-					}
-				}
-			}
-
 		}
 	}
 
