@@ -1,0 +1,5 @@
+@author "Bashar"
+VideoGen{
+	optional videoseq id2 "Videos/optional.mp4"
+	optional videoseq id2 "Videos/optional.mp4"
+}
